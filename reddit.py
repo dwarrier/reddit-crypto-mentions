@@ -1,10 +1,7 @@
 import json, requests
 
-# Get coin names and symbols from 
-# https://min-api.cryptocompare.com/data/all/coinlist
 
-# Mentions from daily discussion thread
-# Mentions from threads created in the past day
+# Currently only gets mentions from daily discussion thread (the first thread on the cryptocurrency subreddit page).
 
 subreddit = 'cryptocurrency'
 
@@ -16,6 +13,8 @@ def get_top_level_json():
     return r.json()
 
 # Returns a dict of <symbol> : <name>
+# Gets coin names and symbols from 
+# https://min-api.cryptocompare.com/data/all/coinlist
 def get_coin_names():
     url =  'https://min-api.cryptocompare.com/data/all/coinlist'
     coin_dict = {}
@@ -50,18 +49,6 @@ def get_symbol_counts():
     comment_block = " ".join(comments).lower()
     for sym, name in coin_dict.iteritems():
         count_dict[sym] = comment_block.count(" " + sym.lower() + " ")
-        #count_dict[name] = comment_block.count(" " + name.lower() + " ")
+        # To get counts for coin names, use the following instead:
+        # count_dict[name] = comment_block.count(" " + name.lower() + " ")
     return count_dict
-
-# counts = get_symbol_counts()
-# [(sym, count) for sym, count in counts.iteritems() if count > 0]
-
-# view structure of an individual post
-comments_url = r.json()['data']['children'][0]['data']['url']
-comment_req = requests.get(comments_url + '.json', headers={'user-agent': 'Mozilla/5.0'})
-print(json.dumps(r.json()['data']['children'][0]['data']))
-
-'''
-for post in r.json()['data']['children']:
-    print(post['data']['title'])
-'''
